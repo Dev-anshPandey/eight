@@ -1,7 +1,11 @@
+import 'package:eight/screens/food_screen.dart';
 import 'package:eight/screens/home_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp( MyApp());
 }
 
@@ -18,7 +22,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      //home: const HomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/':(context) => HomeScreen(),
+        '/foodscreen':(context)=> FoodScreen(),
+      },
     );
   }
 }

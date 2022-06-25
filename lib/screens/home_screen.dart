@@ -1,11 +1,14 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:eight/widget/sidebar.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:shimmer/shimmer.dart';
 
 int id = 0;
 final items = <Widget>[
@@ -26,144 +29,166 @@ final items = <Widget>[
   ),
 ];
 
+class FireStorageService extends ChangeNotifier {
+  FireStorageService();
+  static Future<dynamic> loadImage(BuildContext context, String Image) async {
+    return await FirebaseStorage.instance.ref().child(Image).getDownloadURL();
+  }
+}
+
+getImage(BuildContext context, String ImageName) async {
+  Image? image;
+  await FireStorageService.loadImage(context, ImageName).then((value) {
+    image = Image.network(
+      value.toString(),
+      fit: BoxFit.cover,
+    );
+  });
+  return image;
+}
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xff8BDF85),
-          child: Icon(Icons.menu_book),
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (Builder) {
-                  return FractionallySizedBox(
-                    heightFactor: 0.65,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.height * 0.03,
-                              right: MediaQuery.of(context).size.height * 0.03,
-                              top: MediaQuery.of(context).size.height * 0.03),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              isDense: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelText: "Search...",
-                              prefixIcon: Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 23.0, left: 5),
-                                child: Icon(Icons.search,
-                                    size: MediaQuery.of(context).size.height *
-                                        0.03,
-                                    color: Colors.black),
+        backgroundColor: Colors.white,
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: Color(0xff8BDF85),
+            child: Icon(Icons.search),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (Builder) {
+                    return FractionallySizedBox(
+                      heightFactor: 0.65,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.height * 0.03,
+                                right:
+                                    MediaQuery.of(context).size.height * 0.03,
+                                top: MediaQuery.of(context).size.height * 0.03),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                isDense: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                labelText: "Search...",
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 23.0, left: 5),
+                                  child: Icon(Icons.search,
+                                      size: MediaQuery.of(context).size.height *
+                                          0.03,
+                                      color: Colors.black),
+                                ),
+                                contentPadding: const EdgeInsets.only(
+                                    top: 10, bottom: 4, left: 4, right: 0),
+                                // prefixIconConstraints: BoxConstraints(minWidth: 40,maxHeight: 45)
                               ),
-                              contentPadding: const EdgeInsets.only(
-                                  top: 10, bottom: 4, left: 4, right: 0),
-                              // prefixIconConstraints: BoxConstraints(minWidth: 40,maxHeight: 45)
                             ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Section(
-                              name: "Bakery",
-                              image: const NetworkImage(
-                                  "https://i.ndtvimg.com/i/2017-10/bakeries_620x350_41509023137.jpg"),
-                            ),
-                            Section(
-                              name: "Sweets",
-                              image: const NetworkImage(
-                                  "https://www.rajbhog.com/wp-content/uploads/2021/03/10-Must-Try-Rajbhog-Sweets-870x635.jpg"),
-                            ),
-                            Section(
-                              name: "Vegetables",
-                              image: const NetworkImage(
-                                  "https://cdn.mos.cms.futurecdn.net/XM8scaSf7gWsiN9jjowikf.jpg"),
-                            ),
-                            Section(
-                              name: "Fruits",
-                              image: const NetworkImage(
-                                  "https://img.onmanorama.com/content/dam/mm/en/food/features/images/2022/1/1/food-prevent-sun-tan.jpg"),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Section(
-                              name: "Beverages",
-                              image: NetworkImage(
-                                  "https://www.bevindustry.com/ext/resources/issues/2019/June/The-Color-Psychology-Behind-Beverage-Ingredients-Beverage-Industry.jpg?1560462971"),
-                            ),
-                            Section(
-                                name: "Snacks",
+                          Row(
+                            children: [
+                              Section(
+                                name: "Bakery",
+                                image: const NetworkImage(
+                                    "https://i.ndtvimg.com/i/2017-10/bakeries_620x350_41509023137.jpg"),
+                              ),
+                              Section(
+                                name: "Sweets",
+                                image: const NetworkImage(
+                                    "https://www.rajbhog.com/wp-content/uploads/2021/03/10-Must-Try-Rajbhog-Sweets-870x635.jpg"),
+                              ),
+                              Section(
+                                name: "Vegetables",
+                                image: const NetworkImage(
+                                    "https://cdn.mos.cms.futurecdn.net/XM8scaSf7gWsiN9jjowikf.jpg"),
+                              ),
+                              Section(
+                                name: "Fruits",
+                                image: const NetworkImage(
+                                    "https://img.onmanorama.com/content/dam/mm/en/food/features/images/2022/1/1/food-prevent-sun-tan.jpg"),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Section(
+                                name: "Beverages",
                                 image: NetworkImage(
-                                    "https://www.vegrecipesofindia.com/wp-content/uploads/2019/03/chana-chaat-recipe-1-480x270.jpg")),
-                            Section(
-                              name: "Chinese",
-                              image: NetworkImage(
-                                  "https://ichef.bbci.co.uk/news/976/cpsprodpb/11ADE/production/_110541427_chinesefood.jpg"),
-                            ),
-                            Section(
-                              name: "Italian",
-                              image: NetworkImage(
-                                  "http://cdn.cnn.com/cnnnext/dam/assets/210211140150-02-classic-italian-dishes.jpg"),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                });
-          }),
-      appBar: AppBar(
-        elevation: 0.4,
-        iconTheme: const IconThemeData(color: Color(0xff8BDF85)),
-        backgroundColor: Colors.white,
-        title: RotationTransition(
-          turns: const AlwaysStoppedAnimation(40 / 360),
-          child: Text(
-            "8",
-            style: TextStyle(
-                color: const Color(0xff8BDF85),
-                fontSize: MediaQuery.of(context).size.height * 0.06),
+                                    "https://www.bevindustry.com/ext/resources/issues/2019/June/The-Color-Psychology-Behind-Beverage-Ingredients-Beverage-Industry.jpg?1560462971"),
+                              ),
+                              Section(
+                                  name: "Snacks",
+                                  image: NetworkImage(
+                                      "https://www.vegrecipesofindia.com/wp-content/uploads/2019/03/chana-chaat-recipe-1-480x270.jpg")),
+                              Section(
+                                name: "Chinese",
+                                image: NetworkImage(
+                                    "https://ichef.bbci.co.uk/news/976/cpsprodpb/11ADE/production/_110541427_chinesefood.jpg"),
+                              ),
+                              Section(
+                                name: "Italian",
+                                image: NetworkImage(
+                                    "http://cdn.cnn.com/cnnnext/dam/assets/210211140150-02-classic-italian-dishes.jpg"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+            }),
+        appBar: AppBar(
+          elevation: 0.4,
+          iconTheme: const IconThemeData(color: Color(0xff8BDF85)),
+          backgroundColor: Colors.white,
+          title: RotationTransition(
+            turns: const AlwaysStoppedAnimation(40 / 360),
+            child: Text(
+              "8",
+              style: TextStyle(
+                  color: const Color(0xff8BDF85),
+                  fontSize: MediaQuery.of(context).size.height * 0.06),
+            ),
           ),
+          centerTitle: true,
+          actions: [
+            Padding(
+              padding:
+                  EdgeInsets.all(MediaQuery.of(context).size.height * 0.013),
+              child: Icon(Icons.location_on,
+                  size: MediaQuery.of(context).size.height * 0.04),
+            ),
+          ],
         ),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.013),
-            child: Icon(Icons.location_on,
-                size: MediaQuery.of(context).size.height * 0.04),
-          ),
-        ],
-      ),
-      drawer: const SideBar(),
-      body: SingleChildScrollView(
-          scrollDirection: Axis.vertical, child: HomeWidget()),
-      bottomNavigationBar: bottomNavigation() 
-    );
+        drawer: const SideBar(),
+        body: SingleChildScrollView(
+            scrollDirection: Axis.vertical, child: HomeWidget()),
+        bottomNavigationBar: bottomNavigation());
   }
 }
 // Padding(
 //         padding: EdgeInsets.symmetric(horizontal:18.0),
-        
+
 //         child: GNav(
-      
+
 //           activeColor:Colors.white,
 //          tabBackgroundColor: Color(0xff8BDF85),
 //          padding: EdgeInsets.all(10),
-         
+
 //           tabs: [
 //              GButton(icon: Icons.shopping_cart , text: "  Cart",),
 //             GButton(icon: Icons.home , text: "  Home",),
@@ -256,40 +281,40 @@ class HomeWidget extends StatelessWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(children: [
-            TrendingCard(
-              dishImage: const NetworkImage(
-                  "https://res.cloudinary.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/wmbjkynpnxjfjp4oe2e4"),
-              dishName: "Chole Bhature",
-              chiefName: "Mr. Abc Xyz",
-              cost: "150",
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/foodscreen');
+              },
+              child: TrendingCard(
+                dishString: "choleBhature2.jpg",
+                dishName: "Chole Bhature",
+                chiefName: "Mr. Abc Xyz",
+                cost: "99",
+              ),
             ),
             TrendingCard(
-              dishImage: const NetworkImage(
-                  "https://www.ticklingpalates.com/wp-content/uploads/2021/08/Instant-Pot-Pav-Bhaji-Recipe.jpg"),
-              dishName: "       Pav Bhaji      ",
+              dishString: "pavBhaji.jpg",
+              dishName: "Pav Bhaji",
               chiefName: "Mr. Abc Xyz",
               cost: "88  ",
             ),
             TrendingCard(
-              dishImage: const NetworkImage(
-                  "https://res.cloudinary.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/wmbjkynpnxjfjp4oe2e4"),
+              dishString: "choleBhature.jpg",
               dishName: "Chole Bhature",
               chiefName: "Mr. Abc Xyz",
-              cost: "150",
+              cost: "99",
             ),
             TrendingCard(
-              dishImage: const NetworkImage(
-                  "https://res.cloudinary.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/wmbjkynpnxjfjp4oe2e4"),
+              dishString: "choleBhature.jpg",
               dishName: "Chole Bhature",
               chiefName: "Mr. Abc Xyz",
-              cost: "150",
+              cost: "99",
             ),
             TrendingCard(
-              dishImage: const NetworkImage(
-                  "https://res.cloudinary.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/wmbjkynpnxjfjp4oe2e4"),
+              dishString: "choleBhature.jpg",
               dishName: "Chole Bhature",
               chiefName: "Mr. Abc Xyz",
-              cost: "150",
+              cost: "99",
             ),
           ]),
         ),
@@ -358,12 +383,12 @@ class Section extends StatelessWidget {
 }
 
 class TrendingCard extends StatelessWidget {
-  ImageProvider<Object>? dishImage;
+  String? dishString;
   String? dishName;
   String? chiefName = "Mr. Abc Xyz";
   String? cost = "150";
 
-  TrendingCard({this.dishImage, this.dishName, this.chiefName, this.cost});
+  TrendingCard({this.dishString, this.dishName, this.chiefName, this.cost});
 
   @override
   Widget build(BuildContext context) {
@@ -376,11 +401,46 @@ class TrendingCard extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.525,
         child: Card(
           child: Column(children: [
-            Image(
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.height * 0.2,
-                width: MediaQuery.of(context).size.width * 0.5,
-                image: dishImage!),
+            Builder(builder: (context) {
+              return FutureBuilder(
+                future: getImage(context, dishString!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return Padding(
+                      padding: const EdgeInsets.all(0.1),
+                      child: Container(
+                          height: 170,
+                          width: 400,
+                          child: snapshot.data as Widget,
+                          color: Colors.grey[300]),
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[200]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        width: 400,
+                        height: 170,
+                    child:
+                   Container(
+                      height: 250,
+                      width: double.infinity,
+                      color: Colors.grey[300],
+                    )));
+                    // ),
+
+                  }
+                  return Container();
+                },
+              );
+            }),
+            // Image(
+            //     fit: BoxFit.cover,
+            //     height: MediaQuery.of(context).size.height * 0.2,
+            //     width: MediaQuery.of(context).size.width * 0.5,
+            //     image: dishImage!),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
