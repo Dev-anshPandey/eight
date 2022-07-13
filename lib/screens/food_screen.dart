@@ -2,8 +2,11 @@ import 'package:eight/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FoodScreen extends StatelessWidget {
+  FoodDetail foodDetail = FoodDetail();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,18 +78,17 @@ class FoodScreen extends StatelessWidget {
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[200]!,
-                      child: Container(
-                        color: Colors.grey[300],
-                        width: double.infinity,
-                        height: 250,
-                    child:
-                    Container(
-                      height: 250,
-                      width: double.infinity,
-                      color: Colors.grey[300],
-                    )));
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[200]!,
+                        child: Container(
+                            color: Colors.grey[300],
+                            width: double.infinity,
+                            height: 250,
+                            child: Container(
+                              height: 250,
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                            )));
                     // ),
 
                   }
@@ -100,10 +102,39 @@ class FoodScreen extends StatelessWidget {
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Chole  Bhature ",
-                    style: GoogleFonts.lato(
-                        fontSize: MediaQuery.of(context).size.height * 0.025,
-                        fontWeight: FontWeight.bold)),
+                FutureBuilder(
+                    future: foodDetail.foodTitle(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final food = snapshot.data.toString();
+                        return Text(food!,
+                            style: GoogleFonts.lato(
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.025,
+                                fontWeight: FontWeight.bold));
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[200]!,
+                            child: Container(
+                                color: Colors.grey[300],
+                                width: 150,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.025,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.025,
+                                  width: 150,
+                                  color: Colors.grey[300],
+                                )));
+                      }
+                      return Container();
+                    }),
+                // Text("Chole  Bhature ",
+                //     style: GoogleFonts.lato(
+                //         fontSize: MediaQuery.of(context).size.height * 0.025,
+                //         fontWeight: FontWeight.bold)),
                 Padding(
                   padding: const EdgeInsets.only(left: 5.0),
                   child: Image(
@@ -155,11 +186,38 @@ class FoodScreen extends StatelessWidget {
                       color: Color(0xff8BDF85),
                       size: 25,
                     ),
-                    Text("150",
-                        style: GoogleFonts.lato(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.035,
-                            fontWeight: FontWeight.bold)),
+                    FutureBuilder(
+                        future: foodDetail.foodPrice(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final food = snapshot.data.toString();
+                            return Text(food!,
+                                style: GoogleFonts.lato(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.035,
+                                    fontWeight: FontWeight.bold));
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[200]!,
+                                child: Container(
+                                    color: Colors.grey[300],
+                                    width: 50,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.035,
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.035,
+                                      width: 50,
+                                      color: Colors.grey[300],
+                                    )));
+                          }
+                          return Container();
+                        }),
                   ],
                 ),
                 Padding(
@@ -220,62 +278,231 @@ class FoodScreen extends StatelessWidget {
                     fontSize: MediaQuery.of(context).size.height * 0.020,
                     color: Colors.grey)),
           ),
+          FutureBuilder(
+              future: foodDetail.Ingredients(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  String ingredients = snapshot.data
+                      .toString()
+                      .replaceAll('[', "")
+                      .replaceAll(']', "");
+                  List Ingredients = ingredients.split(',');
+                  return Container(
+                    height: 170,
+                    width: double.infinity,
+                    child: ListView.builder(
+                        padding: EdgeInsets.only(top: 10),
+                        scrollDirection: Axis.vertical,
+                        itemCount: Ingredients.length,
+                        itemBuilder: ((context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.height * 0.015,
+                              // top: MediaQuery.of(context).size.height * 0.008),
+                            ),
+                            child: Row(
+                              children: [
+                                index == 0
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10.0),
+                                        child: Text("• ",
+                                            style: GoogleFonts.lato(
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.017,
+                                                color: Colors.grey)),
+                                      )
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10.0),
+                                        child: Text("•",
+                                            style: GoogleFonts.lato(
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.017,
+                                                color: Colors.grey)),
+                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Text(Ingredients[index],
+                                      style: GoogleFonts.lato(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.017,
+                                          color: Colors.grey)),
+                                ),
+                              ],
+                            ),
+                          );
+                        })),
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[200]!,
+                      child: Column(
+                        children: [
+                          Container(
+                              margin: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.height *
+                                      0.015,
+                                  bottom: 10,
+                                  top: 10),
+                              color: Colors.grey[300],
+                              width: 60,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.017,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.017,
+                                width: 60,
+                                color: Colors.grey[300],
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.height *
+                                      0.015,
+                                  bottom: 10),
+                              color: Colors.grey[300],
+                              width: 60,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.017,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.017,
+                                width: 60,
+                                color: Colors.grey[300],
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.height *
+                                      0.015,
+                                  bottom: 10),
+                              color: Colors.grey[300],
+                              width: 60,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.017,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.017,
+                                width: 60,
+                                color: Colors.grey[300],
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.height *
+                                      0.015,
+                                  bottom: 10),
+                              color: Colors.grey[300],
+                              width: 60,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.017,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.017,
+                                width: 60,
+                                color: Colors.grey[300],
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.height *
+                                      0.015,
+                                  bottom: 10),
+                              color: Colors.grey[300],
+                              width: 60,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.017,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.017,
+                                width: 60,
+                                color: Colors.grey[300],
+                              )),
+                          Container(
+                              margin: EdgeInsets.only(
+                                left:
+                                    MediaQuery.of(context).size.height * 0.015,
+                              ),
+                              color: Colors.grey[300],
+                              width: 60,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.017,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.017,
+                                width: 60,
+                                color: Colors.grey[300],
+                              )),
+                        ],
+                      ));
+                }
+                return Container();
+              }),
+          // Padding(
+          //   padding: EdgeInsets.only(
+          //       left: MediaQuery.of(context).size.height * 0.015,
+          //       top: MediaQuery.of(context).size.height * 0.017),
+          //   child: Text("• Chole",
+          //       style: GoogleFonts.lato(
+          //           fontSize: MediaQuery.of(context).size.height * 0.017,
+          //           color: Colors.grey)),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.only(
+          //       left: MediaQuery.of(context).size.height * 0.015,
+          //       top: MediaQuery.of(context).size.height * 0.008),
+          //   child: Text("• Onion",
+          //       style: GoogleFonts.lato(
+          //           fontSize: MediaQuery.of(context).size.height * 0.017,
+          //           color: Colors.grey)),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.only(
+          //       left: MediaQuery.of(context).size.height * 0.015,
+          //       top: MediaQuery.of(context).size.height * 0.008),
+          //   child: Text("• Courd",
+          //       style: GoogleFonts.lato(
+          //           fontSize: MediaQuery.of(context).size.height * 0.017,
+          //           color: Colors.grey)),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.only(
+          //       left: MediaQuery.of(context).size.height * 0.015,
+          //       top: MediaQuery.of(context).size.height * 0.008),
+          //   child: Text("• Flour",
+          //       style: GoogleFonts.lato(
+          //           fontSize: MediaQuery.of(context).size.height * 0.017,
+          //           color: Colors.grey)),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.only(
+          //       left: MediaQuery.of(context).size.height * 0.015,
+          //       top: MediaQuery.of(context).size.height * 0.008),
+          //   child: Text("• Salt",
+          //       style: GoogleFonts.lato(
+          //           fontSize: MediaQuery.of(context).size.height * 0.017,
+          //           color: Colors.grey)),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.only(
+          //       left: MediaQuery.of(context).size.height * 0.015,
+          //       top: MediaQuery.of(context).size.height * 0.008),
+          //   child: Text("• Spices",
+          //       style: GoogleFonts.lato(
+          //           fontSize: MediaQuery.of(context).size.height * 0.017,
+          //           color: Colors.grey)),
+          // ),
           Padding(
             padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.height * 0.015,
-                top: MediaQuery.of(context).size.height * 0.017),
-            child: Text("• Chole",
-                style: GoogleFonts.lato(
-                    fontSize: MediaQuery.of(context).size.height * 0.017,
-                    color: Colors.grey)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.height * 0.015,
-                top: MediaQuery.of(context).size.height * 0.008),
-            child: Text("• Onion",
-                style: GoogleFonts.lato(
-                    fontSize: MediaQuery.of(context).size.height * 0.017,
-                    color: Colors.grey)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.height * 0.015,
-                top: MediaQuery.of(context).size.height * 0.008),
-            child: Text("• Courd",
-                style: GoogleFonts.lato(
-                    fontSize: MediaQuery.of(context).size.height * 0.017,
-                    color: Colors.grey)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.height * 0.015,
-                top: MediaQuery.of(context).size.height * 0.008),
-            child: Text("• Flour",
-                style: GoogleFonts.lato(
-                    fontSize: MediaQuery.of(context).size.height * 0.017,
-                    color: Colors.grey)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.height * 0.015,
-                top: MediaQuery.of(context).size.height * 0.008),
-            child: Text("• Salt",
-                style: GoogleFonts.lato(
-                    fontSize: MediaQuery.of(context).size.height * 0.017,
-                    color: Colors.grey)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.height * 0.015,
-                top: MediaQuery.of(context).size.height * 0.008),
-            child: Text("• Spices",
-                style: GoogleFonts.lato(
-                    fontSize: MediaQuery.of(context).size.height * 0.017,
-                    color: Colors.grey)),
-          ),
-          Padding(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.04),
+                left: MediaQuery.of(context).size.height * 0.04,
+                right: MediaQuery.of(context).size.height * 0.04,
+                top: MediaQuery.of(context).size.height * 0.02,
+                bottom: MediaQuery.of(context).size.height * 0.04),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -287,11 +514,35 @@ class FoodScreen extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.02,
                 ),
-                Text("Mr. Abc  Xyz",
-                    style: GoogleFonts.lato(
-                      color: Colors.black,
-                      fontSize: MediaQuery.of(context).size.height * 0.018,
-                    )),
+                FutureBuilder(
+                    future: foodDetail.ChiefName(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final food = snapshot.data.toString();
+                        return Text(food!,
+                            style: GoogleFonts.lato(
+                              fontSize:
+                                  MediaQuery.of(context).size.height * 0.018,
+                            ));
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[200]!,
+                            child: Container(
+                                color: Colors.grey[300],
+                                width: 120,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.018,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.018,
+                                  width: 120,
+                                  color: Colors.grey[300],
+                                )));
+                      }
+                      return Container();
+                    }),
               ],
             ),
           ),
@@ -301,7 +552,7 @@ class FoodScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.8,
               child: ElevatedButton(
                 onPressed: () {},
-                child: Text("₹ 150     |     ADD TO CART",
+                child: Text("₹ 150    |     ADD TO CART",
                     style: GoogleFonts.lato(
                       color: Colors.white,
                       fontSize: MediaQuery.of(context).size.height * 0.018,
@@ -317,5 +568,43 @@ class FoodScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class FoodDetail {
+  foodTitle() async {
+    final foods =
+        FirebaseFirestore.instance.collection('foods').doc("CholeBhature");
+    final snapshot = await foods.get();
+    if (snapshot.exists) {
+      return snapshot.data()!['title'];
+    }
+  }
+
+  foodPrice() async {
+    final foods =
+        FirebaseFirestore.instance.collection('foods').doc("CholeBhature");
+    final snapshot = await foods.get();
+    if (snapshot.exists) {
+      return snapshot.data()!['cost'];
+    }
+  }
+
+  ChiefName() async {
+    final foods =
+        FirebaseFirestore.instance.collection('foods').doc("CholeBhature");
+    final snapshot = await foods.get();
+    if (snapshot.exists) {
+      return snapshot.data()!['chief'];
+    }
+  }
+
+  Ingredients() async {
+    final foods =
+        FirebaseFirestore.instance.collection('foods').doc("CholeBhature");
+    final snapshot = await foods.get();
+    if (snapshot.exists) {
+      return snapshot.data()!['Ingredients'];
+    }
   }
 }

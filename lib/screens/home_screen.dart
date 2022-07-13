@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:eight/widget/sidebar.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,23 +13,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shimmer/shimmer.dart';
 
 int id = 0;
-final items = <Widget>[
-  const Icon(
-    Icons.shopping_cart,
-    size: 29,
-    color: Colors.white,
-  ),
-  const Icon(
-    Icons.home,
-    size: 29,
-    color: Colors.white,
-  ),
-  const Icon(
-    Icons.shop,
-    size: 29,
-    color: Colors.white,
-  ),
-];
 
 class FireStorageService extends ChangeNotifier {
   FireStorageService();
@@ -56,7 +41,10 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
             backgroundColor: Color(0xff8BDF85),
-            child: Icon(Icons.search),
+            child: Icon(
+              Icons.search_rounded,
+              size: 30,
+            ),
             onPressed: () {
               showModalBottomSheet(
                   context: context,
@@ -177,7 +165,8 @@ class HomeScreen extends StatelessWidget {
         drawer: const SideBar(),
         body: SingleChildScrollView(
             scrollDirection: Axis.vertical, child: HomeWidget()),
-        bottomNavigationBar: bottomNavigation());
+        bottomNavigationBar: bottomNavigation()
+        );
   }
 }
 // Padding(
@@ -347,6 +336,167 @@ class HomeWidget extends StatelessWidget {
         //     ),
         //   ],
         // )
+        Padding(
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.03,
+              left: MediaQuery.of(context).size.height * 0.02),
+          child: Text("Recommended :",
+              style: GoogleFonts.lato(
+                fontSize: MediaQuery.of(context).size.height * 0.025,
+              )),
+        ),
+
+        Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.only(
+                 top: MediaQuery.of(context).size.height * 0.06,
+                  left: MediaQuery.of(context).size.height * 0.016,
+                  right: MediaQuery.of(context).size.height * 0.01),
+              height: 190,
+              width: double.infinity,
+              child: Card(
+                color: Colors.white,
+                child: Padding(
+                  padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height * 0.19),
+                  child: Row( 
+                  
+                    children: [
+                      Container(
+                        height: 190,
+                        width: 0.3,
+                        color: Color.fromARGB(255, 202, 197, 197)
+                      ),
+                      
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              Padding(
+                                padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height * 0.01,
+                      ),
+                                child: Row(
+                                  children: [
+                                    Text("  Chowmin",
+
+              style: GoogleFonts.lato(
+                fontSize: MediaQuery.of(context).size.height * 0.020,
+              )),
+              SizedBox(
+                width: 20,
+              ),
+
+             
+                                   ],
+                                ),
+                              ),
+                              
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Row(
+                        children: [
+                          Text("4.8 (18) ",
+                            style: GoogleFonts.lato(
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.018,
+                           )),
+                          const Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 20,
+                          ),
+                         // SizedBox(width: 20,)
+                        ],
+                      ),
+                      
+
+                ],
+              ),
+                   SizedBox(
+                height: 15,
+              ),
+                 Padding(
+                   padding: const EdgeInsets.only(left:8.0),
+                   child: Row(
+                         children: [
+                                  Icon(Icons.timer_outlined,color: Colors.grey,),
+                                  Text(":",style: TextStyle(color: Colors.grey),),
+                                  Text("10 min ",style: TextStyle(color: Colors.grey),),
+                                    Text("+ ",style: TextStyle(color: Colors.grey),),
+                                    Icon(Icons.delivery_dining_outlined,color: Colors.grey,),
+                                ],
+                              ),
+                 )
+                            ],
+
+                           
+                            
+                          ),
+                            Column(
+                              children: [
+                                Container(
+                    margin: EdgeInsets.only(top:40),
+                   child: Padding(
+                     padding: const EdgeInsets.all(8.0),
+                     child: Row(
+                       children: [
+                         Icon(
+                        Icons.currency_rupee_sharp,
+                        color: Colors.white,
+                        size: 15,
+                      ),
+                         Text("150  ",
+                                      style: GoogleFonts.lato(
+                                        color: Colors.white,
+                                          fontSize:
+                                              MediaQuery.of(context).size.height * 0.018,
+                                          )),
+                       ],
+                     ),
+                   ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                       color: Color(0xff8BDF85),
+                    ),
+                  ),
+                 
+                  Padding(
+                    padding: const EdgeInsets.only(top:25.0 , left:50),
+                    child: Icon(Icons.add_shopping_cart,
+                       color: Colors.grey,
+                    ),
+                  )
+                              ],
+                            ),
+                          
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+             const Positioned(
+          top: 20,
+          left: 30,
+          child: CircleAvatar(
+            radius: 67,
+            backgroundColor: Colors.black,
+            child: CircleAvatar(
+          
+              radius: 65,
+              backgroundImage:   NetworkImage(
+                              "https://myfoodstory.com/wp-content/uploads/2021/07/Easy-Chicken-Chow-Mein-3-500x500.jpg"
+                              ),
+            ),
+          ),
+        )
+          ],
+        ),
+        
       ],
     );
   }
@@ -417,18 +567,17 @@ class TrendingCard extends StatelessWidget {
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[200]!,
-                      child: Container(
-                        color: Colors.grey[300],
-                        width: 400,
-                        height: 170,
-                    child:
-                   Container(
-                      height: 250,
-                      width: double.infinity,
-                      color: Colors.grey[300],
-                    )));
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[200]!,
+                        child: Container(
+                            color: Colors.grey[300],
+                            width: 400,
+                            height: 170,
+                            child: Container(
+                              height: 250,
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                            )));
                     // ),
 
                   }
