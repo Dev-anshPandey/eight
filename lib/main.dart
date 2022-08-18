@@ -1,22 +1,21 @@
 import 'package:eight/screens/food_screen.dart';
 import 'package:eight/screens/home_screen.dart';
+import 'package:eight/screens/map.dart';
+import 'package:eight/widget/wlocation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 Future main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    
-    return MaterialApp( 
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '8',
       theme: ThemeData(
@@ -25,11 +24,10 @@ class MyApp extends StatelessWidget {
       //home: const HomeScreen(),
       initialRoute: '/',
       routes: {
-        '/':(context) => HomeScreen(),
-        '/foodscreen':(context)=> FoodScreen(),
+        '/': (context) => HomeScreen(),
+        '/foodscreen': (context) => FoodScreen(),
+        '/map': (context) => LocationMap(),
       },
     );
   }
 }
-
-

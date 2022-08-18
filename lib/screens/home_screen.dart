@@ -1,12 +1,12 @@
 import 'dart:ui';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:eight/screens/map.dart';
 import 'package:eight/widget/sidebar.dart';
+import 'package:eight/widget/wlocation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
-
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +21,8 @@ class FireStorageService extends ChangeNotifier {
   }
 }
 
+LocationMap usrloc = LocationMap();
+
 getImage(BuildContext context, String ImageName) async {
   Image? image;
   await FireStorageService.loadImage(context, ImageName).then((value) {
@@ -32,8 +34,16 @@ getImage(BuildContext context, String ImageName) async {
   return image;
 }
 
+String topDisplayAddress = "";
+String bottomDisplayAddress = "";
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  void initState() {
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,16 +167,24 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding:
                   EdgeInsets.all(MediaQuery.of(context).size.height * 0.013),
-              child: Icon(Icons.location_on,
-                  size: MediaQuery.of(context).size.height * 0.04),
+              child: GestureDetector(
+                onTap: () {
+                  
+                  Navigator.pushNamed(context, '/map');
+                },
+                child: Icon(Icons.location_on,
+                    size: MediaQuery.of(context).size.height * 0.04),
+              ),
             ),
+            Container(
+              child: Text(topDisplayAddress),
+            )
           ],
         ),
         drawer: const SideBar(),
         body: SingleChildScrollView(
             scrollDirection: Axis.vertical, child: HomeWidget()),
-        bottomNavigationBar: bottomNavigation()
-        );
+        bottomNavigationBar: bottomNavigation());
   }
 }
 // Padding(
@@ -288,19 +306,19 @@ class HomeWidget extends StatelessWidget {
               cost: "88  ",
             ),
             TrendingCard(
-              dishString: "choleBhature.jpg",
+              dishString: "choleBhature2.jpg",
               dishName: "Chole Bhature",
               chiefName: "Mr. Abc Xyz",
               cost: "99",
             ),
             TrendingCard(
-              dishString: "choleBhature.jpg",
+              dishString: "choleBhature2.jpg",
               dishName: "Chole Bhature",
               chiefName: "Mr. Abc Xyz",
               cost: "99",
             ),
             TrendingCard(
-              dishString: "choleBhature.jpg",
+              dishString: "choleBhature2.jpg",
               dishName: "Chole Bhature",
               chiefName: "Mr. Abc Xyz",
               cost: "99",
@@ -350,7 +368,7 @@ class HomeWidget extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.only(
-                 top: MediaQuery.of(context).size.height * 0.06,
+                  top: MediaQuery.of(context).size.height * 0.06,
                   left: MediaQuery.of(context).size.height * 0.016,
                   right: MediaQuery.of(context).size.height * 0.01),
               height: 190,
@@ -358,120 +376,134 @@ class HomeWidget extends StatelessWidget {
               child: Card(
                 color: Colors.white,
                 child: Padding(
-                  padding:  EdgeInsets.only(left: MediaQuery.of(context).size.height * 0.19),
-                  child: Row( 
-                  
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.height * 0.19),
+                  child: Row(
                     children: [
                       Container(
-                        height: 190,
-                        width: 0.3,
-                        color: Color.fromARGB(255, 202, 197, 197)
-                      ),
-                      
+                          height: 190,
+                          width: 0.3,
+                          color: Color.fromARGB(255, 202, 197, 197)),
                       Row(
                         children: [
                           Column(
                             children: [
                               Padding(
-                                padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height * 0.01,
-                      ),
+                                padding: EdgeInsets.only(
+                                  top:
+                                      MediaQuery.of(context).size.height * 0.01,
+                                ),
                                 child: Row(
                                   children: [
                                     Text("  Chowmin",
-
-              style: GoogleFonts.lato(
-                fontSize: MediaQuery.of(context).size.height * 0.020,
-              )),
-              SizedBox(
-                width: 20,
-              ),
-
-             
-                                   ],
+                                        style: GoogleFonts.lato(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.020,
+                                        )),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                children: [
-                  Row(
-                        children: [
-                          Text("4.8 (18) ",
-                            style: GoogleFonts.lato(
-                                fontSize:
-                                    MediaQuery.of(context).size.height * 0.018,
-                           )),
-                          const Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                          size: 20,
-                          ),
-                         // SizedBox(width: 20,)
-                        ],
-                      ),
-                      
-
-                ],
-              ),
-                   SizedBox(
-                height: 15,
-              ),
-                 Padding(
-                   padding: const EdgeInsets.only(left:8.0),
-                   child: Row(
-                         children: [
-                                  Icon(Icons.timer_outlined,color: Colors.grey,),
-                                  Text(":",style: TextStyle(color: Colors.grey),),
-                                  Text("10 min ",style: TextStyle(color: Colors.grey),),
-                                    Text("+ ",style: TextStyle(color: Colors.grey),),
-                                    Icon(Icons.delivery_dining_outlined,color: Colors.grey,),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text("4.8 (18) ",
+                                          style: GoogleFonts.lato(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.018,
+                                          )),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.yellow,
+                                        size: 20,
+                                      ),
+                                      // SizedBox(width: 20,)
+                                    ],
+                                  ),
                                 ],
                               ),
-                 )
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.timer_outlined,
+                                      color: Colors.grey,
+                                    ),
+                                    Text(
+                                      ":",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    Text(
+                                      "10 min ",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    Text(
+                                      "+ ",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    Icon(
+                                      Icons.delivery_dining_outlined,
+                                      color: Colors.grey,
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
-
-                           
-                            
                           ),
-                            Column(
-                              children: [
-                                Container(
-                    margin: EdgeInsets.only(top:40),
-                   child: Padding(
-                     padding: const EdgeInsets.all(8.0),
-                     child: Row(
-                       children: [
-                         Icon(
-                        Icons.currency_rupee_sharp,
-                        color: Colors.white,
-                        size: 15,
-                      ),
-                         Text("150  ",
-                                      style: GoogleFonts.lato(
+                          Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(top: 40),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.currency_rupee_sharp,
                                         color: Colors.white,
-                                          fontSize:
-                                              MediaQuery.of(context).size.height * 0.018,
+                                        size: 15,
+                                      ),
+                                      Text("150  ",
+                                          style: GoogleFonts.lato(
+                                            color: Colors.white,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.018,
                                           )),
-                       ],
-                     ),
-                   ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                       color: Color(0xff8BDF85),
-                    ),
-                  ),
-                 
-                  Padding(
-                    padding: const EdgeInsets.only(top:25.0 , left:50),
-                    child: Icon(Icons.add_shopping_cart,
-                       color: Colors.grey,
-                    ),
-                  )
-                              ],
-                            ),
-                          
+                                    ],
+                                  ),
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  color: Color(0xff8BDF85),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 25.0, left: 50),
+                                child: Icon(
+                                  Icons.add_shopping_cart,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            ],
+                          ),
                         ],
                       )
                     ],
@@ -479,21 +511,21 @@ class HomeWidget extends StatelessWidget {
                 ),
               ),
             ),
-             const Positioned(
-          top: 20,
-          left: 30,
-          child: CircleAvatar(
-            radius: 67,
-            backgroundColor: Colors.black,
-            child: CircleAvatar(
-          
-              radius: 65,
-              backgroundImage:   NetworkImage(
-                              "https://myfoodstory.com/wp-content/uploads/2021/07/Easy-Chicken-Chow-Mein-3-500x500.jpg"
-                              ),
-            ),
-          ),
-        )
+            Positioned(
+              top: 20,
+              left: 30,
+              child: CircleAvatar(
+                radius: 67,
+                backgroundColor: Colors.black,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 65,
+                  backgroundImage: const NetworkImage(
+                      "https://myfoodstory.com/wp-content/uploads/2021/07/Easy-Chicken-Chow-Mein-3-500x500.jpg"),
+                ),
+              ),
+            )
+         
           ],
         ),
         
@@ -795,14 +827,16 @@ class _MenuCardState extends State<MenuCard> {
             child: Container(
               child: id == 3
                   ? DisplayType(
-                      type: "Engineers",
-                      color: Color(0xFFFEE135),
+                      type: "Sandwhich",
+                      color: Color(0xff8BDF85),
                       border: Colors.black,
+                      image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/f/ff/Egg_Sandwich.jpg")
                     )
                   : DisplayType(
-                      type: "Engineers",
+                      type: "Sandwhich",
                       color: Colors.white,
                       border: Colors.white,
+                      image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/f/ff/Egg_Sandwich.jpg")
                     ),
             ),
           ),
@@ -815,12 +849,12 @@ class _MenuCardState extends State<MenuCard> {
             child: Container(
               child: id == 4
                   ? DisplayType(
-                      type: "Bricks",
-                      color: Color(0xFFFEE135),
+                      type: "Chinese",
+                      color: Color(0xff8BDF85),
                       border: Colors.black,
                     )
                   : DisplayType(
-                      type: "Bricks",
+                      type: "Chinese",
                       color: Colors.white,
                       border: Colors.white,
                     ),
@@ -835,12 +869,12 @@ class _MenuCardState extends State<MenuCard> {
             child: Container(
               child: id == 5
                   ? DisplayType(
-                      type: "Cement",
-                      color: Color(0xFFFEE135),
+                      type: "South Indian",
+                      color:  Color(0xff8BDF85),
                       border: Colors.black,
                     )
                   : DisplayType(
-                      type: "Cement",
+                      type: "South Indian",
                       color: Colors.white,
                       border: Colors.white,
                     ),

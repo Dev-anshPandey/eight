@@ -165,7 +165,7 @@ class FoodScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 10, left: 8, bottom: 20),
             child: Row(
-              children: [
+              children: const [
                 Icon(Icons.star, color: Colors.yellow, size: 25),
                 Icon(Icons.star, color: Colors.yellow, size: 25),
                 Icon(Icons.star, color: Colors.yellow, size: 25),
@@ -181,7 +181,7 @@ class FoodScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.currency_rupee_sharp,
                       color: Color(0xff8BDF85),
                       size: 25,
@@ -443,60 +443,7 @@ class FoodScreen extends StatelessWidget {
                 }
                 return Container();
               }),
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //       left: MediaQuery.of(context).size.height * 0.015,
-          //       top: MediaQuery.of(context).size.height * 0.017),
-          //   child: Text("• Chole",
-          //       style: GoogleFonts.lato(
-          //           fontSize: MediaQuery.of(context).size.height * 0.017,
-          //           color: Colors.grey)),
-          // ),
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //       left: MediaQuery.of(context).size.height * 0.015,
-          //       top: MediaQuery.of(context).size.height * 0.008),
-          //   child: Text("• Onion",
-          //       style: GoogleFonts.lato(
-          //           fontSize: MediaQuery.of(context).size.height * 0.017,
-          //           color: Colors.grey)),
-          // ),
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //       left: MediaQuery.of(context).size.height * 0.015,
-          //       top: MediaQuery.of(context).size.height * 0.008),
-          //   child: Text("• Courd",
-          //       style: GoogleFonts.lato(
-          //           fontSize: MediaQuery.of(context).size.height * 0.017,
-          //           color: Colors.grey)),
-          // ),
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //       left: MediaQuery.of(context).size.height * 0.015,
-          //       top: MediaQuery.of(context).size.height * 0.008),
-          //   child: Text("• Flour",
-          //       style: GoogleFonts.lato(
-          //           fontSize: MediaQuery.of(context).size.height * 0.017,
-          //           color: Colors.grey)),
-          // ),
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //       left: MediaQuery.of(context).size.height * 0.015,
-          //       top: MediaQuery.of(context).size.height * 0.008),
-          //   child: Text("• Salt",
-          //       style: GoogleFonts.lato(
-          //           fontSize: MediaQuery.of(context).size.height * 0.017,
-          //           color: Colors.grey)),
-          // ),
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //       left: MediaQuery.of(context).size.height * 0.015,
-          //       top: MediaQuery.of(context).size.height * 0.008),
-          //   child: Text("• Spices",
-          //       style: GoogleFonts.lato(
-          //           fontSize: MediaQuery.of(context).size.height * 0.017,
-          //           color: Colors.grey)),
-          // ),
+          
           Padding(
             padding: EdgeInsets.only(
                 left: MediaQuery.of(context).size.height * 0.04,
