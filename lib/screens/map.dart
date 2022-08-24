@@ -248,26 +248,26 @@ class _MapState extends State<LocationMap> {
                 ),
                 Padding(
               padding: const EdgeInsets.only(top: 5.0, left: 18),
-              // child: FutureBuilder(
-              //     future: usrloc.UsrFn(),
-              //     initialData: "Loading..",
-              //     builder: (BuildContext context, AsyncSnapshot<String> text) {
-              //        print(text.data.toString());
-              //       return Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Text(
-              //             text.data.toString(),
-              //             style: const TextStyle(
-              //               fontSize: 13,
-              //               color: Colors.black,
-              //             ),
-              //           ),
+              child: FutureBuilder(
+                  future: usrloc.UsrFn(),
+                  initialData: "Loading..",
+                  builder: (BuildContext context, AsyncSnapshot<String> text) {
+                     print(text.data.toString());
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          text.data.toString(),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.black,
+                          ),
+                        ),
                         
 
-              //         ],
-              //       );
-              //     }),
+                      ],
+                    );
+                  }),
             )
               ],
             ),
