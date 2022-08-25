@@ -9,6 +9,7 @@ import 'package:eight/widget/sidebar.dart';
 import 'package:eight/widget/wlocation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
 import 'package:google_fonts/google_fonts.dart';
@@ -259,8 +260,8 @@ class HomeScreen extends StatelessWidget {
           body: Consumer<BottomProvider>(
             builder: (context, value, child) {
               return SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: displayScreen[value.bottomNo]);
+                  scrollDirection: Axis.vertical,
+                  child: displayScreen[value.bottomNo]);
             },
           ),
           bottomNavigationBar: bottomNavigation()),
@@ -556,9 +557,17 @@ class RecWidget extends StatelessWidget {
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 25.0, left: 50),
-                              child: Icon(
-                                Icons.add_shopping_cart,
-                                color: Colors.grey,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Fluttertoast.showToast(
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white,
+                                    msg: "Added to Cart");
+                                },
+                                child: Icon(
+                                  Icons.add_shopping_cart,
+                                  color: Colors.grey,
+                                ),
                               ),
                             )
                           ],
