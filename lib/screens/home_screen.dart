@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:eight/provider/bottom_provier.dart';
+import 'package:eight/provider/cart_provider.dart';
 import 'package:eight/provider/categ_provider.dart';
 import 'package:eight/screens/cart.dart';
 import 'package:eight/screens/map.dart';
 import 'package:eight/screens/order_status.dart';
+import 'package:eight/widget/cart_widget.dart';
 import 'package:eight/widget/sidebar.dart';
 import 'package:eight/widget/wlocation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,12 +21,13 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 int id = 0;
+int cartid = 0;
 List trendingList = [
   TrendingCard(
     dishString: "choleBhature2.jpg",
     dishName: "Chole Bhature",
     chiefName: "Mr. Abc Xyz",
-    cost: "99",
+    cost: "150",
   ),
   TrendingCard(
     dishString: "pavBhaji.jpg",
@@ -33,22 +36,23 @@ List trendingList = [
     cost: "88  ",
   ),
   TrendingCard(
-    dishString: "choleBhature2.jpg",
-    dishName: "Chole Bhature",
+    dishString: "pizza.jpg",
+    dishName: "Pizza",
     chiefName: "Mr. Abc Xyz",
-    cost: "99",
+    cost: "199",
   ),
+ 
   TrendingCard(
-    dishString: "choleBhature2.jpg",
-    dishName: "Chole Bhature",
+    dishString: "dosa.jpg",
+    dishName: "Dosa",
     chiefName: "Mr. Abc Xyz",
-    cost: "99",
+    cost: "199",
   ),
-  TrendingCard(
-    dishString: "choleBhature2.jpg",
-    dishName: "Chole Bhature",
+   TrendingCard(
+    dishString: "Idli.jpg",
+    dishName: "Idli Sambhar",
     chiefName: "Mr. Abc Xyz",
-    cost: "99",
+    cost: "151",
   ),
 ];
 List burger = [
@@ -118,8 +122,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<BottomProvider>(
-      create: (context) => BottomProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<BottomProvider>(
+          create: ((context) => BottomProvider()),
+        ),
+        ChangeNotifierProvider<CartProvider>(
+            create: ((context) => CartProvider()))
+      ],
       child: Scaffold(
           backgroundColor: Colors.white,
           floatingActionButton: FloatingActionButton(
@@ -408,19 +418,33 @@ class HomeWidget extends StatelessWidget {
                 fontSize: MediaQuery.of(context).size.height * 0.025,
               )),
         ),
-        RecWidget(),
-        RecWidget(),
-        RecWidget()
+        RecWidget(
+            Price: "150",
+            dishName: "Chowmin",
+            url:
+                "https://myfoodstory.com/wp-content/uploads/2021/07/Easy-Chicken-Chow-Mein-3-500x500.jpg"),
+        RecWidget(
+          Price: "100",
+          dishName: "French Fires",
+          url:
+              "https://www.mcdonalds.com/content/dam/usa/nfl/nutrition/items/regular/desktop/t-mcdonalds-Fries-Small-Medium.jpg",
+        ),
+        RecWidget(
+          Price: "75",
+          dishName: "Burger",
+          url:
+              "https://www.chicken.ca/wp-content/uploads/2013/05/Moist-Chicken-Burgers-1180x580.jpg",
+        )
       ],
     );
   }
 }
 
 class RecWidget extends StatelessWidget {
-  const RecWidget({
-    Key? key,
-  }) : super(key: key);
-
+  String? dishName;
+  String? Price;
+  String? url;
+  RecWidget({this.dishName, this.Price, this.url});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -456,7 +480,7 @@ class RecWidget extends StatelessWidget {
                               ),
                               child: Row(
                                 children: [
-                                  Text("  Chowmin",
+                                  Text(dishName!,
                                       style: GoogleFonts.lato(
                                         fontSize:
                                             MediaQuery.of(context).size.height *
@@ -537,7 +561,7 @@ class RecWidget extends StatelessWidget {
                                       color: Colors.white,
                                       size: 15,
                                     ),
-                                    Text("150  ",
+                                    Text(Price!,
                                         style: GoogleFonts.lato(
                                           color: Colors.white,
                                           fontSize: MediaQuery.of(context)
@@ -560,9 +584,9 @@ class RecWidget extends StatelessWidget {
                               child: GestureDetector(
                                 onTap: () {
                                   Fluttertoast.showToast(
-                                    backgroundColor: Colors.black,
-                                    textColor: Colors.white,
-                                    msg: "Added to Cart");
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                      msg: "Added to Cart");
                                 },
                                 child: Icon(
                                   Icons.add_shopping_cart,
@@ -588,8 +612,7 @@ class RecWidget extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 radius: 65,
-                backgroundImage: const NetworkImage(
-                    "https://myfoodstory.com/wp-content/uploads/2021/07/Easy-Chicken-Chow-Mein-3-500x500.jpg"),
+                backgroundImage: NetworkImage(url!),
               ),
             ),
           )
@@ -639,6 +662,7 @@ class TrendingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<CartProvider>(context, listen: false);
     return Padding(
       padding: EdgeInsets.only(
           top: MediaQuery.of(context).size.height * 0.03,
@@ -779,11 +803,25 @@ class TrendingCard extends StatelessWidget {
                 //   width: MediaQuery.of(context).size.width*0.3,
 
                 // ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(right: 5.0),
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: Colors.black,
+                  child: GestureDetector(
+                    onTap: () {
+                      cart.addCI(CartItem(
+                        url: dishString,
+                        dishName: dishName,
+                        id: cartid++,
+                      ));
+                    
+                      Fluttertoast.showToast(
+                          backgroundColor: Colors.black,
+                          textColor: Colors.white,
+                          msg: "Added to Cart");
+                    },
+                    child: Icon(
+                      Icons.add_shopping_cart,
+                      color: Colors.black,
+                    ),
                   ),
                 )
               ],

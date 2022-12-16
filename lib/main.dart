@@ -1,6 +1,7 @@
 import 'package:eight/screens/food_screen.dart';
 import 'package:eight/screens/home_screen.dart';
 import 'package:eight/screens/map.dart';
+import 'package:eight/widget/cart_widget.dart';
 import 'package:eight/widget/wlocation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
