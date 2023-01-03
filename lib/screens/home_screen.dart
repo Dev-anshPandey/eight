@@ -207,29 +207,29 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                Section(
-                                  name: "Beverages",
-                                  image: NetworkImage(
-                                      "https://www.bevindustry.com/ext/resources/issues/2019/June/The-Color-Psychology-Behind-Beverage-Ingredients-Beverage-Industry.jpg?1560462971"),
-                                ),
-                                Section(
-                                    name: "Snacks",
-                                    image: NetworkImage(
-                                        "https://www.vegrecipesofindia.com/wp-content/uploads/2019/03/chana-chaat-recipe-1-480x270.jpg")),
-                                Section(
-                                  name: "Chinese",
-                                  image: NetworkImage(
-                                      "https://ichef.bbci.co.uk/news/976/cpsprodpb/11ADE/production/_110541427_chinesefood.jpg"),
-                                ),
-                                Section(
-                                  name: "Italian",
-                                  image: NetworkImage(
-                                      "http://cdn.cnn.com/cnnnext/dam/assets/210211140150-02-classic-italian-dishes.jpg"),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Section(
+                            //       name: "Beverages",
+                            //       image: NetworkImage(
+                            //           "https://www.bevindustry.com/ext/resources/issues/2019/June/The-Color-Psychology-Behind-Beverage-Ingredients-Beverage-Industry.jpg?1560462971"),
+                            //     ),
+                            //     Section(
+                            //         name: "Snacks",
+                            //         image: NetworkImage(
+                            //             "https://www.vegrecipesofindia.com/wp-content/uploads/2019/03/chana-chaat-recipe-1-480x270.jpg")),
+                            //     Section(
+                            //       name: "Chinese",
+                            //       image: NetworkImage(
+                            //           "https://ichef.bbci.co.uk/news/976/cpsprodpb/11ADE/production/_110541427_chinesefood.jpg"),
+                            //     ),
+                            //     Section(
+                            //       name: "Italian",
+                            //       image: NetworkImage(
+                            //           "http://cdn.cnn.com/cnnnext/dam/assets/210211140150-02-classic-italian-dishes.jpg"),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       );
